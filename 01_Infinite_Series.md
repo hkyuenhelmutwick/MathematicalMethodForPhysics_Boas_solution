@@ -4049,3 +4049,864 @@ s_{\text{miles}} \approx \sqrt{\frac{3h}{2}} \quad \text{with } h \text{ in feet
 $$
 
 ---
+
+## 16. MISCELLANEOUS PROBLEMS
+
+
+### 1
+
+(a) **Book Stacking and the Harmonic Series**
+
+Suppose each book has length $L$ (set $L=1$ for simplicity). To maximize overhang, place each new book so the pile above it is just at the point of tipping. The overhang contributed by the $n$th book from the top is $1/(2n)$ (measured from the right edge of the book below).
+
+The total overhang for $N$ books is:
+$$
+O_N = \frac{1}{2} \sum_{n=1}^N \frac{1}{n}
+$$
+This is half the $N$th partial sum of the harmonic series.
+
+The harmonic series diverges, so the overhang can be made as large as desired by using enough books.
+
+---
+
+(b) **Sum of $N$ Terms of the Harmonic Series**
+
+Compute $H_N = \sum_{n=1}^N \frac{1}{n}$ for:
+- $N=25$: $H_{25} \approx 3.816$
+- $N=100$: $H_{100} \approx 5.187$
+- $N=200$: $H_{200} \approx 5.878$
+- $N=1000$: $H_{1000} \approx 7.485$
+- $N=10^6$: $H_{10^6} \approx 14.3927$
+- $N=10^{100}$: $H_{10^{100}} \approx \ln(10^{100}) + \gamma \approx 230.26$
+
+(Here $\gamma \approx 0.5772$ is Euler–Mascheroni constant.)
+
+---
+
+(c) **Number of Books Needed for a Given Overhang**
+
+The overhang for $N$ books is $O_N = \frac{1}{2} H_N$.
+
+To get an overhang of $k$ book lengths:
+$$
+\frac{1}{2} H_N = k \implies H_N = 2k
+$$
+So, $N \approx e^{2k - \gamma}$ (using $H_N \approx \ln N + \gamma$).
+
+- For $k=2$: $H_N=4$, $N \approx e^{4-0.5772} \approx 33$
+- For $k=3$: $H_N=6$, $N \approx e^{6-0.5772} \approx 262$
+- For $k=10$: $H_N=20$, $N \approx e^{20-0.5772} \approx 4.8 \times 10^8$
+- For $k=100$: $H_N=200$, $N \approx e^{200-0.5772} \approx 2.1 \times 10^{86}$
+
+**Summary Table:**
+| Overhang (books) | Number of books needed |
+|------------------|-----------------------|
+| 2                | 33                    |
+| 3                | 262                   |
+| 10               | $4.8 \times 10^8$     |
+| 100              | $2.1 \times 10^{86}$  |
+
+---
+
+### 2
+
+The mobile consists of rods (or straws) connected by threads, each thread going from the left end of a rod to a point on the rod below. Number the rods from the bottom up, with rod 1 at the bottom.
+
+Let each rod have length $L$ (set $L=1$ for simplicity). For all rods to be horizontal, the torque about the thread for each rod must be zero (balance of moments).
+
+Let $d_n$ be the distance from the left end of rod $n$ to the thread that supports it.
+
+**Solution:**
+
+- The bottom rod (rod 1) is supported at its left end: $d_1 = 0$.
+- The second rod (rod 2) must be supported so that the combined center of mass of rods 1 and 2 is directly below the thread.
+- In general, for rod $n$, the thread must be placed so that the center of mass of all rods below (rods 1 to $n-1$) is directly below the thread.
+
+By induction, the distance from the left end of rod $n$ to the thread is:
+$$
+d_n = \sum_{k=1}^{n-1} \frac{1}{k}
+$$
+This is the same as the overhang formula in Problem 1 (but without the $1/2$ factor, since the rods are balanced, not at the tipping point).
+
+**Relation to Problem 1:**
+- In Problem 1, the overhang is $\frac{1}{2} \sum_{n=1}^N \frac{1}{n}$.
+- Here, the thread positions are given by the partial sums of the harmonic series: $d_n = \sum_{k=1}^{n-1} \frac{1}{k}$.
+
+So, the mobile's thread positions are determined by the same harmonic series as the book overhang problem, but the full sum (not halved).
+
+---
+
+### 3
+
+Show that $\sum_{n=2}^\infty 1/n^{3/2}$ is convergent. What is wrong with the following “proof” that it diverges?
+
+**Convergence:**
+This is a $p$-series with $p = 3/2 > 1$, so it converges:
+$$
+\sum_{n=2}^\infty \frac{1}{n^{3/2}} \text{ converges.}
+$$
+
+**What is wrong with the “proof”?**
+The “proof” groups terms and claims:
+$$
+\frac{1}{\sqrt{8}} + \frac{1}{\sqrt{27}} + \frac{1}{\sqrt{64}} + \cdots > \frac{1}{\sqrt{9}} + \frac{1}{\sqrt{36}} + \frac{1}{\sqrt{81}} + \cdots
+$$
+which is
+$$
+\frac{1}{3} + \frac{1}{6} + \frac{1}{9} + \cdots = \frac{1}{3} \sum_{n=1}^\infty \frac{1}{n}
+$$
+But this comparison is not valid. The terms $1/\sqrt{n}$ decrease much more slowly than $1/n^{3/2}$.
+
+**Correct comparison:**
+The $k$th term in the grouped series is $1/\sqrt{k^3} = 1/(k^{3/2})$, but the number of terms between $k^3$ and $(k+1)^3$ grows as $3k^2$ (by the binomial theorem). So, the sum of $1/\sqrt{n^3}$ over $n$ is much less than the sum of $1/(3n)$.
+
+**Hint explanation:**
+Compare $3n$ and $n\sqrt{n}$:
+$$
+\frac{1}{n\sqrt{n}} = \frac{1}{n^{3/2}}
+$$
+For large $n$, $n\sqrt{n} > 3n$, so $1/n^{3/2} < 1/(3n)$ for large $n$.
+
+Thus, the original series converges by the $p$-series test, and the “proof” is invalid because it overestimates the terms by grouping them incorrectly.
+
+---
+
+### 4 
+
+$$\sum_{n=1}^{\infty} \frac{2^n}{n!}$$
+
+**Test:** Ratio Test
+
+Let $a_n = \frac{2^n}{n!}$.
+
+$$
+\lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \frac{2^{n+1}}{(n+1)!} \cdot \frac{n!}{2^n} = \lim_{n \to \infty} \frac{2}{n+1} = 0
+$$
+Since the limit is less than $1$, the series **converges**.
+
+---
+
+### 5 
+
+$$\sum_{n=2}^{\infty} \frac{(n-1)^2}{1+n^2}$$
+
+**Test:** Limit Comparison Test with $1$ (diverges) or $n^2/n^2 = 1$.
+
+For large $n$:
+$$
+\frac{(n-1)^2}{1+n^2} \sim \frac{n^2}{n^2} = 1
+$$
+So the terms do not go to zero, and the series behaves like $\sum 1$, which **diverges**.
+
+---
+
+### 6 
+
+$$\sum_{n=2}^{\infty} \frac{\sqrt{n-1}}{(n+1)^2-1}$$
+
+**Test:** Comparison Test
+
+Simplify denominator:
+$$(n+1)^2-1 = n^2 + 2n + 1 - 1 = n^2 + 2n$$
+So,
+$$
+\frac{\sqrt{n-1}}{n^2 + 2n} \sim \frac{n^{1/2}}{n^2} = \frac{1}{n^{3/2}}
+$$
+Since $\sum 1/n^{3/2}$ converges ($p$-series, $p=3/2>1$), the original series **converges** by comparison.
+
+---
+
+### 7 
+
+$$\sum_{n=2}^{\infty} \frac{1}{n \ln(n^3)}$$
+
+**Test:** Comparison Test
+
+$\ln(n^3) = 3\ln n$, so:
+$$
+\frac{1}{n \ln(n^3)} = \frac{1}{3n \ln n}
+$$
+Compare to $\sum 1/(n \ln n)$, which **diverges** (integral test).
+So, the original series **diverges**.
+
+---
+
+### 8 
+
+$$\sum_{n=2}^{\infty} \frac{2n^3}{n^4-2}$$
+
+**Test:** Comparison Test
+
+For large $n$:
+$$
+\frac{2n^3}{n^4-2} \sim \frac{2n^3}{n^4} = \frac{2}{n}
+$$
+Since $\sum 1/n$ diverges (harmonic series), the original series **diverges**.
+
+---
+
+### 9 
+
+$$\sum_{n=1}^{\infty} \frac{x^n}{\ln(n+1)}$$
+
+**Test:** Root or Ratio Test
+
+Let $a_n = \frac{x^n}{\ln(n+1)}$.
+
+Ratio test:
+$$
+\lim_{n\to\infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n\to\infty} \left| \frac{x^{n+1}}{\ln(n+2)} \cdot \frac{\ln(n+1)}{x^n} \right| = |x| \lim_{n\to\infty} \frac{\ln(n+1)}{\ln(n+2)} = |x|
+$$
+So, converges if $|x| < 1$, diverges if $|x| > 1$.
+
+**Endpoints:**
+- $x = 1$: $\sum \frac{1}{\ln(n+1)}$ diverges (compare to $\sum 1/n^p$ with $p<1$).
+- $x = -1$: $\sum \frac{(-1)^n}{\ln(n+1)}$ converges by the alternating series test (terms decrease to $0$ and alternate).
+
+**Interval:** $[-1, 1)$
+
+---
+
+### 10 
+
+$$\sum_{n=1}^{\infty} \frac{(n!)^2 x^n}{(2n)!}$$
+
+**Test:** Ratio Test
+
+Let $a_n = \frac{(n!)^2 x^n}{(2n)!}$.
+
+$$
+\lim_{n\to\infty} \left| \frac{a_{n+1}}{a_n} \right| = |x| \lim_{n\to\infty} \frac{(n+1)!^2 (2n)!}{(2n+2)! n!^2}
+$$
+Note $(n+1)! = (n+1)n!$, $(2n+2)! = (2n+2)(2n+1)(2n)!$:
+$$
+= |x| \lim_{n\to\infty} \frac{(n+1)^2}{(2n+2)(2n+1)} = |x| \lim_{n\to\infty} \frac{n^2}{4n^2} = \frac{|x|}{4}
+$$
+So, converges if $|x| < 4$, diverges if $|x| > 4$.
+
+**Endpoints:**
+- $x = 4$: $a_n \sim \frac{1}{n}$ (by Stirling's approximation), so diverges.
+- $x = -4$: $a_n$ alternates, but $|a_n| \sim \frac{1}{n}$, so diverges.
+
+**Interval:** $(-4, 4)$
+
+---
+
+### 11 
+
+$$\sum_{n=1}^{\infty} \frac{(-1)^n x^{2n-1}}{2n-1}$$
+
+**Test:** Root or Ratio Test
+
+Let $a_n = \frac{(-1)^n x^{2n-1}}{2n-1}$.
+
+Ratio test:
+$$
+\lim_{n\to\infty} \left| \frac{x^{2n+1}}{2n+1} \cdot \frac{2n-1}{x^{2n-1}} \right| = x^2 \lim_{n\to\infty} \frac{2n-1}{2n+1} = x^2
+$$
+So, converges if $|x| < 1$, diverges if $|x| > 1$.
+
+**Endpoints:**
+- $x = 1$: $\sum \frac{(-1)^n}{2n-1}$ converges by the alternating series test.
+- $x = -1$: $\sum \frac{(-1)^n (-1)^{2n-1}}{2n-1} = \sum \frac{(-1)^n (-1)}{2n-1} = \sum \frac{(-1)^{n+1}}{2n-1}$, which also converges by the alternating series test.
+
+**Interval:** $[-1, 1]$
+
+---
+
+### 12
+
+$$\sum_{n=1}^{\infty} \frac{x^n n^2}{5n(n^2+1)}$$
+
+**Test:** Ratio Test
+
+Simplify:
+$$
+\frac{x^n n^2}{5n(n^2+1)} = \frac{x^n n}{5(n^2+1)}
+$$
+Ratio test:
+$$
+\lim_{n\to\infty} \left| \frac{x^{n+1} (n+1)}{5((n+1)^2+1)} \cdot \frac{5(n^2+1)}{x^n n} \right| = |x| \lim_{n\to\infty} \frac{n+1}{n} \cdot \frac{n^2+1}{(n+1)^2+1}
+$$
+As $n \to \infty$, $\frac{n+1}{n} \to 1$, $\frac{n^2+1}{(n+1)^2+1} \to 1$.
+So, limit is $|x|$.
+
+So, converges if $|x| < 1$, diverges if $|x| > 1$.
+
+**Endpoints:**
+- $x = 1$: $a_n \sim \frac{1}{n}$, diverges.
+- $x = -1$: $a_n \sim \frac{(-1)^n}{n}$, converges by the alternating series test.
+
+**Interval:** $[-1, 1)$
+
+---
+
+### 13 
+
+$$\sum_{n=1}^{\infty} \frac{(x+2)^n}{(-3)^n \sqrt{n}}$$
+
+**Test:** Root Test
+
+Let $a_n = \frac{(x+2)^n}{(-3)^n \sqrt{n}}$.
+
+Root test:
+$$
+\lim_{n\to\infty} \left| \frac{(x+2)^n}{(-3)^n \sqrt{n}} \right|^{1/n} = \frac{|x+2|}{3}
+$$
+So, converges if $|x+2| < 3$, diverges if $|x+2| > 3$.
+
+**Endpoints:**
+- $x = 1$: $a_n = \frac{3^n}{(-3)^n \sqrt{n}} = \frac{(-1)^n}{\sqrt{n}}$, converges by the alternating series test.
+- $x = -5$: $a_n = \frac{(-3)^n}{(-3)^n \sqrt{n}} = \frac{1}{\sqrt{n}}$, diverges.
+
+**Interval:** $(-5, 1]$
+
+---
+
+### 14
+
+$$
+\cos[\ln(1+x)]
+$$
+Expand $\ln(1+x)$:
+$$
+\ln(1+x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots
+$$
+Now expand $\cos y$:
+$$
+\cos y = 1 - \frac{y^2}{2} + \frac{y^4}{24} - \cdots
+$$
+Substitute $y = \ln(1+x)$ and keep terms up to $x^3$:
+- $y^2 \approx x^2 - x^3$
+- $y^4$ is $O(x^4)$
+So,
+$$
+\cos[\ln(1+x)] \approx 1 - \frac{1}{2}(x^2 - x^3) = 1 - \frac{1}{2}x^2 + \frac{1}{2}x^3
+$$
+
+---
+
+### 15
+
+$$
+\ln\left(\frac{\sin x}{x}\right)
+$$
+Expand $\sin x$:
+$$
+\sin x = x - \frac{x^3}{6} + \frac{x^5}{120} - \cdots
+$$
+So,
+$$
+\frac{\sin x}{x} = 1 - \frac{x^2}{6} + \frac{x^4}{120} - \cdots
+$$
+Now expand $\ln(1+z)$:
+$$
+\ln(1+z) = z - \frac{z^2}{2} + \frac{z^3}{3} - \cdots
+$$
+Let $z = -\frac{x^2}{6} + \frac{x^4}{120}$:
+$$
+\ln\left(\frac{\sin x}{x}\right) \approx -\frac{x^2}{6} + \frac{x^4}{120} - \frac{1}{2}\left(-\frac{x^2}{6}\right)^2
+$$
+$$
+= -\frac{x^2}{6} + \frac{x^4}{120} - \frac{1}{2}\cdot\frac{x^4}{36}
+$$
+$$
+= -\frac{x^2}{6} + \frac{x^4}{120} - \frac{x^4}{72}
+$$
+$$
+= -\frac{x^2}{6} - \frac{x^4}{90}
+$$
+
+---
+
+### 16
+
+$$
+\frac{1}{\sqrt{1+\sin x}}
+$$
+Expand $\sin x$:
+$$
+\sin x = x - \frac{x^3}{6} + \cdots
+$$
+So $1 + \sin x = 1 + x - \frac{x^3}{6}$
+Now expand $(1+y)^{-1/2}$:
+$$
+(1+y)^{-1/2} = 1 - \frac{1}{2}y + \frac{3}{8}y^2 - \frac{5}{16}y^3 + \cdots
+$$
+Let $y = x - \frac{x^3}{6}$:
+- $y^2 \approx x^2$
+- $y^3 \approx x^3$
+So,
+$$
+\frac{1}{\sqrt{1+\sin x}} \approx 1 - \frac{1}{2}x + \frac{3}{8}x^2 - \frac{1}{2}\left(-\frac{x^3}{6}\right) + \frac{3}{8}x^2\left(x - \frac{x^3}{6}\right)
+$$
+But up to $x^3$:
+$$
+\frac{1}{\sqrt{1+\sin x}} \approx 1 - \frac{1}{2}x + \frac{3}{8}x^2 + \frac{1}{12}x^3
+$$
+
+---
+
+### 17
+
+$$
+e^{1-\sqrt{1-x^2}}
+$$
+Expand $\sqrt{1-x^2}$:
+$$
+\sqrt{1-x^2} = 1 - \frac{1}{2}x^2 - \frac{1}{8}x^4 + \cdots
+$$
+So $1-\sqrt{1-x^2} = \frac{1}{2}x^2 + \frac{1}{8}x^4$
+Now expand $e^z$:
+$$
+e^z = 1 + z + \frac{z^2}{2} + \cdots
+$$
+Let $z = \frac{1}{2}x^2 + \frac{1}{8}x^4$:
+- $z^2 = \frac{1}{4}x^4$
+So,
+$$
+e^{1-\sqrt{1-x^2}} \approx 1 + \frac{1}{2}x^2 + \frac{1}{8}x^4 + \frac{1}{2}\cdot\frac{1}{4}x^4
+$$
+$$
+= 1 + \frac{1}{2}x^2 + \frac{1}{8}x^4 + \frac{1}{8}x^4
+$$
+$$
+= 1 + \frac{1}{2}x^2 + \frac{1}{4}x^4
+$$
+
+---
+
+### 18
+
+$$
+\arctan x = \int_0^x \frac{du}{1+u^2}
+$$
+Expand $\frac{1}{1+u^2}$ as a geometric series:
+$$
+\frac{1}{1+u^2} = 1 - u^2 + u^4 - u^6 + \cdots
+$$
+Integrate term by term:
+$$
+\arctan x = \int_0^x (1 - u^2 + u^4 - u^6 + \cdots) du = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdots
+$$
+
+---
+
+### 19
+
+Find the Taylor series for $\sin x$ about $a = \pi$.
+
+The Taylor expansion about $a$ is:
+$$
+\sin x = \sin \pi + \cos \pi (x-\pi) - \frac{1}{2} \sin \pi (x-\pi)^2 - \frac{1}{6} \cos \pi (x-\pi)^3 + \cdots
+$$
+Plug in values:
+- $\sin \pi = 0$
+- $\cos \pi = -1$
+So,
+$$
+\sin x = - (x-\pi) + \frac{1}{6} (x-\pi)^3 + \cdots
+$$
+
+---
+
+### 20
+
+Find the Taylor series for $\sqrt[3]{x}$ about $a = 8$.
+
+Let $f(x) = x^{1/3}$, $a = 8$.
+- $f(8) = 2$
+- $f'(x) = \frac{1}{3} x^{-2/3}$, $f'(8) = \frac{1}{3} \cdot 8^{-2/3} = \frac{1}{3} \cdot (2^3)^{-2/3} = \frac{1}{3} \cdot 2^{-2} = \frac{1}{12}$
+- $f''(x) = -\frac{2}{9} x^{-5/3}$, $f''(8) = -\frac{2}{9} \cdot 8^{-5/3} = -\frac{2}{9} \cdot 2^{-5} = -\frac{2}{9} \cdot \frac{1}{32} = -\frac{1}{144}$
+- $f'''(x) = \frac{10}{27} x^{-8/3}$, $f'''(8) = \frac{10}{27} \cdot 8^{-8/3} = \frac{10}{27} \cdot 2^{-8} = \frac{10}{27} \cdot \frac{1}{256} = \frac{5}{6912}$
+
+So,
+$$
+\sqrt[3]{x} = 2 + \frac{1}{12}(x-8) - \frac{1}{288}(x-8)^2 + \frac{5}{6912}(x-8)^3 + \cdots
+$$
+
+---
+
+### 21
+
+Find the Taylor series for $e^x$ about $a = 1$.
+
+All derivatives of $e^x$ are $e^x$, so $f^{(n)}(1) = e^1 = e$.
+
+The Taylor expansion:
+$$
+e^x = e + e(x-1) + \frac{e}{2!}(x-1)^2 + \frac{e}{3!}(x-1)^3 + \cdots
+$$
+Or,
+$$
+e^x = e\left[1 + (x-1) + \frac{1}{2}(x-1)^2 + \frac{1}{6}(x-1)^3 + \cdots\right]
+$$
+
+---
+
+### 22
+
+Show that
+$$
+1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdots = \frac{\pi}{4}
+$$
+**Solution:**
+This is the Maclaurin series for $\arctan x$ at $x=1$ (see Problem 18):
+$$
+\arctan x = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \cdots
+$$
+So at $x=1$:
+$$
+\arctan 1 = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdots = \frac{\pi}{4}
+$$
+
+---
+
+### 23
+
+Show that
+$$
+\frac{\pi^2}{3!} - \frac{\pi^4}{5!} + \frac{\pi^6}{7!} - \cdots = 1
+$$
+**Solution:**
+This is the Maclaurin series for $\cos x$ at $x=\pi$:
+$$
+\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \cdots
+$$
+So,
+$$
+\cos \pi = 1 - \frac{\pi^2}{2!} + \frac{\pi^4}{4!} - \frac{\pi^6}{6!} + \cdots = -1
+$$
+If we multiply both sides by $-1$ and shift indices:
+$$
+1 = \frac{\pi^2}{3!} - \frac{\pi^4}{5!} + \frac{\pi^6}{7!} - \cdots
+$$
+
+---
+
+### 24
+
+Show that
+$$
+\ln 3 + \frac{(\ln 3)^2}{2!} + \frac{(\ln 3)^3}{3!} + \cdots = 2
+$$
+**Solution:**
+This is the Maclaurin series for $e^x$ at $x = \ln 3$ minus the $n=0$ term:
+$$
+e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots
+$$
+So,
+$$
+e^{\ln 3} = 3 = 1 + \ln 3 + \frac{(\ln 3)^2}{2!} + \frac{(\ln 3)^3}{3!} + \cdots
+$$
+Subtract 1 from both sides:
+$$
+\ln 3 + \frac{(\ln 3)^2}{2!} + \frac{(\ln 3)^3}{3!} + \cdots = 2
+$$
+
+---
+
+### 25
+
+Evaluate
+$$
+\lim_{x \to 0} \frac{x^2}{\ln \cos x}
+$$
+by series, by L'Hôpital's rule, and by computer.
+
+**By series:**
+Expand $\cos x$:
+$$
+\cos x = 1 - \frac{x^2}{2} + \frac{x^4}{24} + \cdots
+$$
+So,
+$$
+\ln \cos x = \ln\left(1 - \frac{x^2}{2} + \cdots\right) \approx -\frac{x^2}{2} - \frac{x^4}{12} + \cdots
+$$
+So,
+$$
+\frac{x^2}{\ln \cos x} \approx \frac{x^2}{-\frac{x^2}{2}} = -2
+$$
+
+**By L'Hôpital's rule:**
+Both numerator and denominator $\to 0$ as $x \to 0$.
+Differentiate numerator and denominator:
+$$
+\lim_{x \to 0} \frac{2x}{-\tan x} = \lim_{x \to 0} \frac{2x}{-x} = -2
+$$
+
+**By computer:**
+Numerically, as $x \to 0$, $\frac{x^2}{\ln \cos x} \to -2$.
+
+**Final answer:**
+$$
+\boxed{-2}
+$$
+
+---
+
+### 26
+
+Evaluate
+$$
+\lim_{x\to 0} \left( \frac{1}{x^2} - \frac{1}{1-\cos^2 x} \right)
+$$
+**Solution:**
+Note $1-\cos^2 x = \sin^2 x$.
+So,
+$$
+\frac{1}{1-\cos^2 x} = \frac{1}{\sin^2 x}
+$$
+So the limit is
+$$
+\lim_{x\to 0} \left( \frac{1}{x^2} - \frac{1}{\sin^2 x} \right)
+$$
+Expand $\sin x = x - \frac{x^3}{6} + \cdots$, so $\sin^2 x = x^2 - \frac{x^4}{3} + \cdots$
+Then
+$$
+\frac{1}{\sin^2 x} \approx \frac{1}{x^2} + \frac{1}{3}
+$$
+So,
+$$
+\frac{1}{x^2} - \frac{1}{\sin^2 x} \approx \frac{1}{x^2} - \left( \frac{1}{x^2} + \frac{1}{3} \right) = -\frac{1}{3}
+$$
+**Final answer:**
+$$
+\boxed{-\frac{1}{3}}
+$$
+
+---
+
+### 27
+
+Evaluate
+$$
+\lim_{x\to 0} \left( \frac{1}{x^2} - \cot^2 x \right)
+$$
+**Solution:**
+Expand $\cot x = \frac{1}{x} - \frac{x}{3} - \frac{x^3}{45} + \cdots$
+So,
+$$
+\cot^2 x = \left( \frac{1}{x} - \frac{x}{3} \right)^2 = \frac{1}{x^2} - \frac{2}{3} + \cdots
+$$
+So,
+$$
+\frac{1}{x^2} - \cot^2 x \approx \frac{1}{x^2} - \left( \frac{1}{x^2} - \frac{2}{3} \right) = \frac{2}{3}
+$$
+**Final answer:**
+$$
+\boxed{\frac{2}{3}}
+$$
+
+---
+
+### 28
+
+Evaluate
+$$
+\lim_{x\to 0} \left( \frac{1+x}{x} - \frac{1}{\sin x} \right)
+$$
+**Solution:**
+Expand $\sin x = x - \frac{x^3}{6} + \cdots$
+So,
+$$
+\frac{1}{\sin x} \approx \frac{1}{x} + \frac{x}{6}
+$$
+Also,
+$$
+\frac{1+x}{x} = \frac{1}{x} + 1
+$$
+So,
+$$
+\frac{1+x}{x} - \frac{1}{\sin x} \approx \left( \frac{1}{x} + 1 \right) - \left( \frac{1}{x} + \frac{x}{6} \right) = 1 - \frac{x}{6}
+$$
+Take the limit as $x \to 0$:
+$$
+\boxed{1}
+$$
+
+---
+
+### 29
+
+Compute
+$$
+\left. \frac{d^6}{dx^6} \left( x^4 e^{x^2} \right) \right|_{x=0}
+$$
+**Solution:**
+Expand $e^{x^2} = 1 + x^2 + \frac{x^4}{2} + \frac{x^6}{6} + \cdots$
+So,
+$$
+x^4 e^{x^2} = x^4 + x^6 + \frac{x^8}{2} + \frac{x^{10}}{6} + \cdots
+$$
+The $x^6$ term is $x^6$.
+So the 6th derivative at $x=0$ is $6!$ times the coefficient of $x^6$:
+- From $x^6$: coefficient is $1$.
+- From $x^4 \cdot x^2$: $x^4 \cdot x^2 = x^6$, coefficient is $1$.
+So total coefficient is $1+1=2$.
+So,
+$$
+\left. \frac{d^6}{dx^6} \left( x^4 e^{x^2} \right) \right|_{x=0} = 6! \times 2 = 1440
+$$
+**Final answer:**
+$$
+\boxed{1440}
+$$
+
+---
+
+### 30
+
+(a) **Integral Bounds for the Remainder of a Series**
+
+Let $a_n$ be a positive, decreasing sequence. After summing $N$ terms, the remainder $R_N$ of the series is:
+$$
+R_N = \sum_{n=N+1}^\infty a_n
+$$
+By the integral test (see Figures 6.1 and 6.2),
+$$
+\int_{N+1}^\infty a_n\,dn < R_N < \int_N^\infty a_n\,dn
+$$
+So, if $S_N = \sum_{n=1}^N a_n$, then the total sum $S$ satisfies:
+$$
+S_N + \int_{N+1}^\infty a_n\,dn < S < S_N + \int_N^\infty a_n\,dn
+$$
+
+---
+
+(b) **Application to $\zeta(1.1) = \sum_{n=1}^\infty 1/n^{1.1}$**
+
+Let $a_n = 1/n^{1.1}$.
+
+The integral:
+$$
+I_N = \int_N^\infty n^{-1.1} dn = \left[ \frac{n^{-0.1}}{-0.1} \right]_N^\infty = \frac{N^{-0.1}}{0.1}
+$$
+Set $I_N = 0.005$ to find $N$:
+$$
+\frac{N^{-0.1}}{0.1} = 0.005 \implies N^{-0.1} = 0.0005 \implies N = (0.0005)^{-10} = 2^{10} \times 5^{10} = 1024 \times 9765625 = 10,000,000,000
+$$
+So $N \approx 10^{10}$ (much less than $10^{33}$).
+
+**Upper and lower bounds:**
+- Lower: $S_N + \int_{N+1}^\infty n^{-1.1} dn$
+- Upper: $S_N + \int_N^\infty n^{-1.1} dn$
+
+The difference between the bounds is:
+$$
+\int_N^\infty n^{-1.1} dn - \int_{N+1}^\infty n^{-1.1} dn = \int_N^{N+1} n^{-1.1} dn \approx N^{-1.1}
+$$
+Set $N^{-1.1} \approx 0.005$:
+$$
+N = (0.005)^{-1/1.1} \approx 10.6
+$$
+So, for the difference between bounds to be about $0.005$, $N \approx 11$.
+
+**Summary:**
+- To get the sum within $0.005$ by direct summation, you need $N \sim 10^{33}$ terms.
+- Using the integral bounds, you only need to sum about $N = 11$ terms and add the integral remainder for the same accuracy.
+
+---
+
+### 31
+
+As in Problem 30, for each of the following series, find the number of terms required to find the sum with error < 0.005, and find upper and lower bounds for the sum using a much smaller number of terms.
+
+#### (a)
+$$
+\sum_{n=1}^\infty \frac{1}{n^{1.01}}
+$$
+Let $a_n = 1/n^{1.01}$.
+
+The integral remainder:
+$$
+I_N = \int_N^\infty n^{-1.01} dn = \left[ \frac{n^{-0.01}}{-0.01} \right]_N^\infty = \frac{N^{-0.01}}{0.01}
+$$
+Set $I_N = 0.005$:
+$$
+\frac{N^{-0.01}}{0.01} = 0.005 \implies N^{-0.01} = 0.00005 \implies N = (0.00005)^{-100} = 2^{100} \times 5^{100} = 1.267 \times 10^{170}
+$$
+So, direct summation would require an astronomically large $N$.
+
+**Upper and lower bounds:**
+- Lower: $S_N + \int_{N+1}^\infty n^{-1.01} dn$
+- Upper: $S_N + \int_N^\infty n^{-1.01} dn$
+
+The difference between bounds:
+$$
+\int_N^\infty n^{-1.01} dn - \int_{N+1}^\infty n^{-1.01} dn = \int_N^{N+1} n^{-1.01} dn \approx N^{-1.01}
+$$
+Set $N^{-1.01} \approx 0.005$:
+$$
+N = (0.005)^{-1/1.01} \approx 200
+$$
+So, summing about $N = 200$ terms and adding the integral gives error < 0.005.
+
+---
+
+#### (b)
+$$
+\sum_{n=1}^\infty \frac{1}{n(1+\ln n)^2}
+$$
+Let $a_n = 1/[n(1+\ln n)^2]$.
+
+The integral remainder:
+Let $u = 1+\ln n$, $du = dn/n$.
+$$
+I_N = \int_N^\infty \frac{1}{n(1+\ln n)^2} dn = \int_{1+\ln N}^\infty \frac{1}{u^2} du = \left[ -\frac{1}{u} \right]_{1+\ln N}^\infty = \frac{1}{1+\ln N}
+$$
+Set $I_N = 0.005$:
+$$
+\frac{1}{1+\ln N} = 0.005 \implies 1+\ln N = 200 \implies N = e^{199}
+$$
+Again, direct summation would require a huge $N$.
+
+**Upper and lower bounds:**
+Difference between bounds:
+$$
+I_N - I_{N+1} = \frac{1}{1+\ln N} - \frac{1}{1+\ln(N+1)} \approx \frac{\ln(N+1) - \ln N}{(1+\ln N)^2} \approx \frac{1}{N(1+\ln N)^2}
+$$
+Set $\frac{1}{N(1+\ln N)^2} \approx 0.005$.
+Try $N = 50$:
+- $1+\ln 50 \approx 1+3.91 = 4.91$
+- $N(1+\ln N)^2 \approx 50 \times 24.1 \approx 1205$
+- $1/1205 \approx 0.00083$
+Try $N = 10$:
+- $1+\ln 10 \approx 3.3$
+- $10 \times 10.9 \approx 109$, $1/109 \approx 0.009$
+So, $N \approx 20$ gives error $\sim 0.005$.
+
+---
+
+#### (c)
+$$
+\sum_{n=3}^\infty \frac{1}{n \ln n (\ln \ln n)^2}
+$$
+Let $a_n = 1/[n \ln n (\ln \ln n)^2]$.
+
+The integral remainder:
+Let $u = \ln \ln n$, $du = dn/[n \ln n]$.
+$$
+I_N = \int_N^\infty \frac{1}{n \ln n (\ln \ln n)^2} dn = \int_{\ln \ln N}^\infty \frac{1}{u^2} du = \left[ -\frac{1}{u} \right]_{\ln \ln N}^\infty = \frac{1}{\ln \ln N}
+$$
+Set $I_N = 0.005$:
+$$
+\frac{1}{\ln \ln N} = 0.005 \implies \ln \ln N = 200 \implies \ln N = e^{200} \implies N = e^{e^{200}}
+$$
+Again, direct summation is impossible.
+
+**Upper and lower bounds:**
+Difference between bounds:
+$$
+I_N - I_{N+1} \approx \frac{1}{(\ln \ln N)^2 (N \ln N)}
+$$
+Set $N$ so this is about $0.005$.
+Try $N = 10^6$:
+- $\ln 10^6 = 13.8$, $\ln \ln 10^6 = 2.6$
+- $N \ln N (\ln \ln N)^2 \approx 10^6 \times 13.8 \times 6.76 \approx 9.3 \times 10^7$
+- $1/9.3 \times 10^7 \approx 1.1 \times 10^{-8}$
+Try $N = 100$:
+- $\ln 100 = 4.6$, $\ln \ln 100 = 1.53$, $100 \times 4.6 \times 2.34 \approx 1076$, $1/1076 \approx 0.00093$
+So, $N \approx 200$ gives error $\sim 0.005$.
+
+---
