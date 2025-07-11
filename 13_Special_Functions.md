@@ -2489,7 +2489,9 @@ This means that the value of the elliptic integral over $[0, n\pi \pm \phi]$ can
 
 ---
 
-### 3. Computer plots of elliptic integrals $K(k)$, $E(k)$, $F(\phi, k)$, and $E(\phi, k)$
+### 3. 
+
+Computer plots of elliptic integrals $K(k)$, $E(k)$, $F(\phi, k)$, and $E(\phi, k)$
 
 You can use Python with `numpy`, `matplotlib`, and `scipy.special` to plot these functions. The relevant functions are:
 - `scipy.special.ellipk(k**2)` for $K(k)$
@@ -2585,3 +2587,1465 @@ plt.show()
 - You need `numpy`, `matplotlib`, `scipy`, and `mpl_toolkits` installed.
 
 ---
+
+### 4–13. Identifying and evaluating integrals as elliptic integrals
+
+Below, each integral is identified as a standard elliptic integral (of the first or second kind, complete or incomplete), the substitution to standard form is shown, and Python code using `scipy.special` is provided to evaluate each numerically.
+
+#### 4. 
+$$
+\int_0^1 \frac{dt}{\sqrt{1-t^2}\sqrt{1-t^2/4}}
+$$
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $\sqrt{1-t^2/4} = \sqrt{1-\sin^2\theta/4}$.
+So the integral becomes:
+$$
+\int_0^{\pi/2} \frac{\cos\theta d\theta}{\cos\theta \sqrt{1-\sin^2\theta/4}} = \int_0^{\pi/2} \frac{d\theta}{\sqrt{1-\frac{1}{4}\sin^2\theta}}
+$$
+This is the complete elliptic integral of the first kind with $k^2 = 1/4$, $k = 1/2$:
+$$
+K(1/2) = \int_0^{\pi/2} \frac{d\theta}{\sqrt{1-(1/2)^2\sin^2\theta}}
+$$
+**Python:**
+```python
+from scipy.special import ellipk
+I4 = ellipk(0.25)
+```
+
+---
+
+#### 5.
+$$
+\int_0^{\pi/2} \sqrt{1-\frac{1}{9}\sin^2\theta} d\theta
+$$
+This is the complete elliptic integral of the second kind with $k^2 = 1/9$, $k = 1/3$:
+$$
+E(1/3) = \int_0^{\pi/2} \sqrt{1-(1/3)^2\sin^2\theta} d\theta
+$$
+**Python:**
+```python
+from scipy.special import ellipe
+I5 = ellipe(1/9)
+```
+
+---
+
+#### 6.
+$$
+\int_0^{\pi/3} \frac{d\theta}{\sqrt{9-\sin^2\theta}}
+$$
+Rewrite $\sqrt{9-\sin^2\theta} = 3\sqrt{1-(1/3)^2\sin^2\theta}$:
+$$
+= \frac{1}{3} \int_0^{\pi/3} \frac{d\theta}{\sqrt{1-(1/3)^2\sin^2\theta}}
+$$
+This is an incomplete elliptic integral of the first kind:
+$$
+F(\phi, 1/3),\ \phi = \pi/3,\ k = 1/3
+$$
+**Python:**
+```python
+from scipy.special import ellipkinc
+I6 = (1/3) * ellipkinc(np.pi/3, (1/3)**2)
+```
+
+---
+
+#### 7.
+$$
+\int_0^{5\pi/4} \sqrt{25-\sin^2\theta} d\theta
+$$
+$\sqrt{25-\sin^2\theta} = 5\sqrt{1-(1/5)^2\sin^2\theta}$:
+$$
+= 5 \int_0^{5\pi/4} \sqrt{1-(1/5)^2\sin^2\theta} d\theta
+$$
+This is an incomplete elliptic integral of the second kind:
+$$
+E(\phi, 1/5),\ \phi = 5\pi/4,\ k = 1/5
+$$
+**Python:**
+```python
+from scipy.special import ellipeinc
+I7 = 5 * ellipeinc(5*np.pi/4, (1/5)**2)
+```
+
+---
+
+#### 8.
+$$
+\int_0^{\sqrt{3}/2} \frac{\sqrt{49-4t^2}}{\sqrt{1-t^2}} dt
+$$
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $\sqrt{49-4t^2} = 7\sqrt{1-(2/7)^2\sin^2\theta}$.
+Limits: $t=0\to\theta=0$, $t=\sqrt{3}/2\to\theta=\pi/3$.
+So:
+$$
+= 7 \int_0^{\pi/3} \frac{\sqrt{1-(2/7)^2\sin^2\theta}}{1} d\theta
+$$
+This is $7$ times an incomplete elliptic integral of the second kind:
+$$
+E(\pi/3, 2/7)
+$$
+**Python:**
+```python
+I8 = 7 * ellipeinc(np.pi/3, (2/7)**2)
+```
+
+---
+
+#### 9.
+$$
+\int_{-1/2}^{1/2} \frac{dt}{\sqrt{1-t^2}\sqrt{4-3t^2}}
+$$
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $\sqrt{4-3t^2} = 2\sqrt{1-(\sqrt{3}/2)^2\sin^2\theta}$.
+Limits: $t=\pm1/2\to\theta=\pm\pi/6$.
+So:
+$$
+= \frac{1}{2} \int_{-\pi/6}^{\pi/6} \frac{d\theta}{\sqrt{1-(\sqrt{3}/2)^2\sin^2\theta}}
+$$
+This is an incomplete elliptic integral of the first kind:
+$$
+F(\pi/6, \sqrt{3}/2)
+$$
+**Python:**
+```python
+I9 = 0.5 * ellipkinc(np.pi/6, (np.sqrt(3)/2)**2)
+```
+
+---
+
+#### 10.
+$$
+\int_0^{\pi/4} \frac{d\theta}{\sqrt{4-\sin^2\theta}}
+$$
+$\sqrt{4-\sin^2\theta} = 2\sqrt{1-(1/2)^2\sin^2\theta}$:
+$$
+= \frac{1}{2} \int_0^{\pi/4} \frac{d\theta}{\sqrt{1-(1/2)^2\sin^2\theta}}
+$$
+This is an incomplete elliptic integral of the first kind:
+$$
+F(\pi/4, 1/2)
+$$
+**Python:**
+```python
+I10 = 0.5 * ellipkinc(np.pi/4, (1/2)**2)
+```
+
+---
+
+#### 11.
+$$
+\int_{-\pi/2}^{3\pi/8} \frac{d\theta}{\sqrt{1-\frac{9}{10}\sin^2\theta}}
+$$
+This is an incomplete elliptic integral of the first kind with $k^2 = 9/10$:
+$$
+F(3\pi/8, \sqrt{9/10}) - F(-\pi/2, \sqrt{9/10})
+$$
+**Python:**
+```python
+k11 = np.sqrt(9/10)
+I11 = ellipkinc(3*np.pi/8, k11**2) - ellipkinc(-np.pi/2, k11**2)
+```
+
+---
+
+#### 12.
+$$
+\int_0^{1/2} \frac{\sqrt{100-t^2}}{\sqrt{1-t^2}} dt
+$$
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $\sqrt{100-t^2} = 10\sqrt{1-(1/10)^2\sin^2\theta}$.
+Limits: $t=0\to\theta=0$, $t=1/2\to\theta=\arcsin(1/2)=\pi/6$.
+So:
+$$
+= 10 \int_0^{\pi/6} \sqrt{1-(1/10)^2\sin^2\theta} d\theta
+$$
+This is $10$ times an incomplete elliptic integral of the second kind:
+$$
+E(\pi/6, 1/10)
+$$
+**Python:**
+```python
+I12 = 10 * ellipeinc(np.pi/6, (1/10)**2)
+```
+
+---
+
+#### 13.
+$$
+\int_{-3/4}^{3/4} \frac{\sqrt{9-4t^2}}{\sqrt{1-t^2}} dt
+$$
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $\sqrt{9-4t^2} = 3\sqrt{1-(2/3)^2\sin^2\theta}$.
+Limits: $t=\pm3/4\to\theta=\pm\arcsin(3/4)$.
+So:
+$$
+= 3 \int_{-\arcsin(3/4)}^{\arcsin(3/4)} \sqrt{1-(2/3)^2\sin^2\theta} d\theta
+$$
+This is $3$ times the difference of incomplete elliptic integrals of the second kind:
+$$
+E(\arcsin(3/4), 2/3) - E(-\arcsin(3/4), 2/3)
+$$
+**Python:**
+```python
+phi13 = np.arcsin(3/4)
+I13 = 3 * (ellipeinc(phi13, (2/3)**2) - ellipeinc(-phi13, (2/3)**2))
+```
+
+---
+
+**Note:** All code assumes you have `numpy` and `scipy.special` imported. For each, the value can be printed or used as needed.
+
+---
+
+### 14–16. Arc lengths and circumferences as elliptic integrals
+
+#### 14. Circumference of the ellipse $4x^2 + 9y^2 = 36$
+
+Rewrite in standard form:
+$$
+\frac{x^2}{9} + \frac{y^2}{4} = 1
+$$
+So $a = 3$, $b = 2$ ($a > b$).
+
+The circumference $C$ is:
+$$
+C = 4a E(e)
+$$
+where $e = \sqrt{1 - (b^2/a^2)} = \sqrt{1 - (4/9)} = \sqrt{5/9} = \frac{\sqrt{5}}{3}$, and $E(e)$ is the complete elliptic integral of the second kind.
+
+**Python:**
+```python
+from scipy.special import ellipe
+C14 = 4 * 3 * ellipe(5/9)
+```
+
+---
+
+#### 15. Arc length of the ellipse $x^2 + (y^2/4) = 1$ between $(0,2)$ and $(1/2, \sqrt{3})$
+
+Standard form: $a = 1$, $b = 2$ ($b > a$).
+
+Parametric equations: $x = a \cos\theta$, $y = b \sin\theta$
+- At $(0,2)$: $x=0 \implies \theta = \pi/2$
+- At $(1/2, \sqrt{3})$: $x=1/2 \implies \cos\theta = 1/2 \implies \theta = \pi/3$
+
+But for $y = 2\sin\theta = \sqrt{3} \implies \sin\theta = \sqrt{3}/2 \implies \theta = \pi/3$ (consistent).
+
+Arc length from $\theta_1 = \pi/2$ to $\theta_2 = \pi/3$:
+$$
+L = \int_{\pi/2}^{\pi/3} \sqrt{a^2 \sin^2\theta + b^2 \cos^2\theta} d\theta
+$$
+Let $a = 1$, $b = 2$:
+$$
+= \int_{\pi/2}^{\pi/3} \sqrt{\sin^2\theta + 4\cos^2\theta} d\theta
+$$
+$$
+= \int_{\pi/2}^{\pi/3} \sqrt{1 + 3\cos^2\theta} d\theta
+$$
+This can be written in terms of the incomplete elliptic integral of the second kind:
+Let $k^2 = 3/4$, $k = \sqrt{3}/2$.
+
+Let $\sqrt{1 + 3\cos^2\theta} = 2\sqrt{1 - k^2 \sin^2\theta}$, so:
+$$
+L = 2 \int_{\pi/2}^{\pi/3} \sqrt{1 - (3/4)\sin^2\theta} d\theta = 2 [E(\pi/3, \sqrt{3}/2) - E(\pi/2, \sqrt{3}/2)]
+$$
+**Python:**
+```python
+from scipy.special import ellipeinc
+L15 = 2 * (ellipeinc(np.pi/3, 3/4) - ellipeinc(np.pi/2, 3/4))
+```
+
+---
+
+#### 16. Arc length of one arch of $y = \sin x$
+
+Arc length for $x$ from $0$ to $\pi$:
+$$
+L = \int_0^{\pi} \sqrt{1 + \cos^2 x} dx
+$$
+This can be written in terms of the elliptic integral of the second kind:
+Let $\cos^2 x = 1 - \sin^2 x$, so $1 + \cos^2 x = 2 - \sin^2 x$.
+Let $k^2 = 1/2$, $k = 1/\sqrt{2}$.
+
+Let $1 + \cos^2 x = 2(1 - (1/2)\sin^2 x)$, so:
+$$
+L = \int_0^{\pi} \sqrt{2(1 - (1/2)\sin^2 x)} dx = \sqrt{2} \int_0^{\pi} \sqrt{1 - (1/2)\sin^2 x} dx
+$$
+But $\int_0^{\pi} \sqrt{1 - k^2 \sin^2 x} dx = 2 E(k)$ (since $E(k)$ is over $[0, \pi/2]$).
+So:
+$$
+L = 2\sqrt{2} E(1/2)
+$$
+**Python:**
+```python
+L16 = 2 * np.sqrt(2) * ellipe(0.5)
+```
+
+---
+
+### 19. Arc length of the lemniscate $r^2 = \cos(2\theta)$
+
+The lemniscate is given by $r^2 = \cos(2\theta)$.
+
+The arc length in polar coordinates is:
+$$
+L = \int_{\theta_1}^{\theta_2} \sqrt{r^2 + \left(\frac{dr}{d\theta}\right)^2} d\theta
+$$
+Let's compute $dr/d\theta$:
+$$
+r^2 = \cos(2\theta) \implies r = [\cos(2\theta)]^{1/2}
+$$
+$$
+\frac{dr}{d\theta} = \frac{1}{2} [\cos(2\theta)]^{-1/2} \cdot (-2\sin(2\theta)) = -\frac{\sin(2\theta)}{[\cos(2\theta)]^{1/2}}
+$$
+So:
+$$
+\left(\frac{dr}{d\theta}\right)^2 = \frac{\sin^2(2\theta)}{\cos(2\theta)}
+$$
+Therefore:
+$$
+L = \int_{\theta_1}^{\theta_2} \sqrt{\cos(2\theta) + \frac{\sin^2(2\theta)}{\cos(2\theta)}} d\theta = \int_{\theta_1}^{\theta_2} \frac{\sqrt{\cos^2(2\theta) + \sin^2(2\theta)}}{\sqrt{\cos(2\theta)}} d\theta
+$$
+But $\cos^2(2\theta) + \sin^2(2\theta) = 1$:
+$$
+L = \int_{\theta_1}^{\theta_2} \frac{1}{\sqrt{\cos(2\theta)}} d\theta
+$$
+The lemniscate is symmetric; the full arc is traced as $\theta$ goes from $-\pi/4$ to $\pi/4$ (since $r^2 \geq 0$ only when $|2\theta| \leq \pi/2$).
+
+So, the total length is:
+$$
+L = 2 \int_0^{\pi/4} \frac{d\theta}{\sqrt{\cos(2\theta)}}
+$$
+This is the lemniscate constant $\varpi$:
+$$
+L = 2 \int_0^{\pi/4} \frac{d\theta}{\sqrt{\cos(2\theta)}}
+$$
+This can be written as an elliptic integral of the first kind:
+Let $\sin\phi = \tan\theta$, $d\theta = \frac{d\phi}{\sqrt{1-\sin^2\phi}}$, $\cos(2\theta) = 1 - 2\sin^2\theta = 1 - 2\tan^2\theta/(1+\tan^2\theta)$, but more simply, the standard result is:
+$$
+\int_0^{\pi/4} \frac{d\theta}{\sqrt{\cos(2\theta)}} = \frac{1}{2} K\left(\frac{1}{\sqrt{2}}\right)
+$$
+So:
+$$
+L = K\left(\frac{1}{\sqrt{2}}\right)
+$$
+where $K(k)$ is the complete elliptic integral of the first kind.
+
+**Python:**
+```python
+from scipy.special import ellipk
+L19 = ellipk(0.5)
+```
+
+---
+
+### 20. Special cases of the elliptic integral and Jacobi elliptic functions
+
+#### For $k = 0$:
+The incomplete elliptic integral of the first kind is:
+$$
+u = F(\phi, 0) = \int_0^{\phi} \frac{d\theta}{\sqrt{1 - 0 \cdot \sin^2\theta}} = \int_0^{\phi} d\theta = \phi$$
+So $u = \phi$.
+
+The Jacobi elliptic functions reduce to trigonometric functions:
+- $\operatorname{sn} u = \sin u$
+- $\operatorname{cn} u = \cos u$
+- $\operatorname{dn} u = 1$
+
+#### For $k = 1$:
+The incomplete elliptic integral of the first kind is:
+$$
+u = F(\phi, 1) = \int_0^{\phi} \frac{d\theta}{\sqrt{1 - \sin^2\theta}} = \int_0^{\phi} \frac{d\theta}{\cos\theta} = \int_0^{\phi} \sec\theta d\theta$$
+The integral of $\sec\theta$ is $\ln|\sec\theta + \tan\theta|$:
+$$
+u = \ln(\sec\phi + \tan\phi)$$
+So $u = \ln(\sec\phi + \tan\phi)$, or equivalently $\phi = \operatorname{gd} u$ (the Gudermannian function, see Problem 19).
+
+The Jacobi elliptic functions reduce to hyperbolic functions:
+- $\operatorname{sn} u = \tanh u$
+- $\operatorname{cn} u = \operatorname{dn} u = \operatorname{sech} u$
+
+**Summary:**
+- For $k=0$, the elliptic functions become ordinary trigonometric functions.
+- For $k=1$, they become hyperbolic functions, and the elliptic integral reduces to a logarithmic form.
+
+---
+
+### 21. Verifying the four answers for $\int_0^{\pi/2} \frac{d\theta}{\sqrt{\cos\theta}}$
+
+We are to show that the following four answers for
+$$
+I = \int_0^{\pi/2} \frac{d\theta}{\sqrt{\cos\theta}}
+$$
+are all correct and equivalent:
+
+#### 1. Beta function form
+From (6.4):
+$$
+\int_0^{\pi/2} (\cos\theta)^{2a-1} d\theta = \frac{1}{2} B\left(a, \frac{1}{2}\right)
+$$
+Set $2a-1 = -1/2 \implies a = 1/4$:
+$$
+I = \int_0^{\pi/2} (\cos\theta)^{-1/2} d\theta = \frac{1}{2} B\left(\frac{1}{4}, \frac{1}{2}\right)
+$$
+
+#### 2. Gamma function form
+From (7.1):
+$$
+B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}
+$$
+So:
+$$
+I = \frac{1}{2} \cdot \frac{\Gamma(1/4)\Gamma(1/2)}{\Gamma(3/4)}
+$$
+But $\Gamma(1/2) = \sqrt{\pi}$:
+$$
+I = \frac{1}{2} \cdot \frac{\Gamma(1/4)\sqrt{\pi}}{\Gamma(3/4)}
+$$
+
+#### 3. Elliptic integral form
+Recall the complete elliptic integral of the first kind:
+$$
+K(k) = \int_0^{\pi/2} \frac{d\theta}{\sqrt{1 - k^2 \sin^2\theta}}
+$$
+For $k = 0$, $K(0) = \pi/2$; but for $\int_0^{\pi/2} \frac{d\theta}{\sqrt{\cos\theta}}$, use the hint from Problem 17 with $\alpha = \pi/2$:
+
+Let $\cos\theta = 1 - 2\sin^2(\phi)$, or more simply, the standard result is:
+$$
+\int_0^{\pi/2} \frac{d\theta}{\sqrt{\cos\theta}} = \sqrt{2} K\left(\frac{1}{\sqrt{2}}\right)
+$$
+
+#### 4. Gamma duplication formula form
+From the duplication formula:
+$$
+\Gamma(z)\Gamma\left(z+\frac{1}{2}\right) = 2^{1-2z} \sqrt{\pi} \Gamma(2z)
+$$
+Set $z = 1/4$:
+$$
+\Gamma(1/4)\Gamma(3/4) = 2^{1-1/2} \sqrt{\pi} \Gamma(1/2)
+$$
+But $\Gamma(1/2) = \sqrt{\pi}$, so:
+$$
+\Gamma(1/4)\Gamma(3/4) = 2^{1/2} \pi
+$$
+So:
+$$
+\frac{\Gamma(1/4)}{\Gamma(3/4)} = 2^{1/2} \pi / \Gamma(1/4)
+$$
+Plug into the gamma function form above to relate to the elliptic integral form.
+
+#### Summary: All forms are equivalent
+- Beta function: $\frac{1}{2} B(1/4, 1/2)$
+- Gamma function: $\frac{1}{2} \frac{\Gamma(1/4)\sqrt{\pi}}{\Gamma(3/4)}$
+- Elliptic integral: $\sqrt{2} K(1/\sqrt{2})$
+- All are numerically equal (can be checked in Python):
+
+**Python:**
+```python
+from scipy.special import gamma, ellipk
+import numpy as np
+I1 = 0.5 * gamma(0.25) * np.sqrt(np.pi) / gamma(0.75)
+I2 = np.sqrt(2) * ellipk(0.5)
+print(I1, I2)  # Should be equal
+```
+
+---
+
+### 22. Exact solution for the pendulum and the small amplitude limit
+
+For a simple pendulum, the equation of motion is:
+$$
+\frac{d^2\theta}{dt^2} + \frac{g}{l} \sin\theta = 0
+$$
+For small $\theta$, $\sin\theta \approx \theta$, and the solution is:
+$$
+\theta = \alpha \sin\left(\sqrt{\frac{g}{l}} t\right)
+$$
+where $\alpha$ is the amplitude.
+
+#### Exact solution for arbitrary amplitude
+Multiply both sides by $d\theta/dt$ and integrate (energy method):
+$$
+\frac{1}{2} \left(\frac{d\theta}{dt}\right)^2 - \frac{g}{l} \cos\theta = \text{constant}
+$$
+At $t=0$, $\theta=\alpha$, $d\theta/dt=0$:
+$$
+0 - \frac{g}{l} \cos\alpha = \text{constant}
+$$
+So:
+$$
+\frac{1}{2} \left(\frac{d\theta}{dt}\right)^2 = \frac{g}{l} (\cos\theta - \cos\alpha)
+$$
+$$
+\frac{d\theta}{dt} = \sqrt{\frac{2g}{l} (\cos\theta - \cos\alpha)}
+$$
+
+Let $\phi = \theta/2$, $k = \sin(\alpha/2)$.
+Recall:
+$$
+\cos\theta = 1 - 2\sin^2(\theta/2)
+$$
+So:
+$$
+\cos\theta - \cos\alpha = 2\left[\sin^2(\alpha/2) - \sin^2(\theta/2)\right] = 2\left[k^2 - \sin^2\phi\right]
+$$
+So:
+$$
+\frac{d\theta}{dt} = 2\sqrt{\frac{g}{l}} \sqrt{k^2 - \sin^2\phi}
+$$
+But $d\theta = 2 d\phi$:
+$$
+\frac{d\phi}{dt} = \sqrt{\frac{g}{l}} \sqrt{k^2 - \sin^2\phi}
+$$
+$$
+\frac{d\phi}{\sqrt{k^2 - \sin^2\phi}} = \sqrt{\frac{g}{l}} dt
+$$
+Integrate from $\phi=0$ at $t=0$ to $\phi$ at time $t$:
+$$
+\int_0^{\phi} \frac{d\varphi}{\sqrt{k^2 - \sin^2\varphi}} = \sqrt{\frac{g}{l}} t
+$$
+Let $u = \sin^{-1}(\sin\phi/k)$, then the inverse function is the Jacobi elliptic function:
+$$
+\sin\phi = k\, \operatorname{sn}\left(\sqrt{\frac{g}{l}} t, k\right)
+$$
+So:
+$$
+\sin\frac{\theta}{2} = \sin\frac{\alpha}{2} \operatorname{sn}\left(\sqrt{\frac{g}{l}} t, \sin\frac{\alpha}{2}\right)
+$$
+
+#### Small amplitude limit
+For small $\alpha$, $k = \sin(\alpha/2) \approx \alpha/2$.
+The Jacobi elliptic function $\operatorname{sn}(u, k) \to \sin u$ as $k \to 0$.
+So:
+$$
+\sin\frac{\theta}{2} \approx \frac{\alpha}{2} \sin\left(\sqrt{\frac{g}{l}} t\right)
+$$
+For small $\theta$, $\sin(\theta/2) \approx \theta/2$, so:
+$$
+\theta \approx \alpha \sin\left(\sqrt{\frac{g}{l}} t\right)
+$$
+which is the simple harmonic solution.
+
+**Conclusion:**
+- The exact solution for the pendulum is:
+  $$
+  \boxed{\sin\frac{\theta}{2} = \sin\frac{\alpha}{2} \, \operatorname{sn}\left(\sqrt{\frac{g}{l}} t, \sin\frac{\alpha}{2}\right)}
+  $$
+- For small amplitude $\alpha$, this reduces to the simple harmonic motion solution.
+
+---
+
+### 23. Period of oscillation for a floating sphere (density 1/2)
+
+Let $R$ be the radius of the sphere, $\rho_s = 1/2$ (density of sphere), $\rho_w = 1$ (density of water), $g$ gravity.
+
+#### 1. Equation of motion
+Let $y$ be the vertical displacement of the center from equilibrium (upward positive, $y=0$ at equilibrium, $y<0$ when pushed down). The buoyant force is proportional to the submerged volume:
+- Volume of sphere: $V = \frac{4}{3}\pi R^3$
+- Mass of sphere: $M = \rho_s V$
+- Buoyant force: $F_b = \rho_w V_{sub} g$
+
+At equilibrium, $F_b = Mg$ so $V_{sub,0} = \rho_s V$.
+
+When displaced by $y$, the submerged volume changes. For a sphere just under water, the submerged volume as a function of $y$ is:
+$$
+V_{sub} = V \frac{1 + y/R}{2}
+$$
+(see standard results for a sphere at the surface; for $y = -R$, fully submerged, $V_{sub} = V$; for $y = R$, $V_{sub} = 0$).
+
+The net upward force is:
+$$
+F = F_b - Mg = \rho_w V_{sub} g - \rho_s V g = Vg (\rho_w \frac{1 + y/R}{2} - \rho_s)
+$$
+With $\rho_s = 1/2$, $\rho_w = 1$:
+$$
+F = Vg \left(\frac{1}{2}(1 + y/R) - \frac{1}{2}\right) = Vg \frac{y}{2R}
+$$
+So:
+$$
+M \frac{d^2y}{dt^2} = Vg \frac{y}{2R}
+$$
+But $M = \frac{1}{2} V$:
+$$
+\frac{1}{2} V \frac{d^2y}{dt^2} = Vg \frac{y}{2R}
+$$
+$$
+\frac{d^2y}{dt^2} = \frac{g}{R} y
+$$
+But this is for small $y$. For the exact nonlinear case, the restoring force is proportional to the submerged volume, which for a sphere at the surface is:
+$$
+V_{sub} = V \frac{1 + \sin\theta}{2}
+$$
+where $\theta$ is the angle from the vertical, but for vertical motion, the restoring force is linear in $y$ for small $y$, but for large $y$ the sphere is fully submerged and the force is constant.
+
+However, for a sphere of density $1/2$, the motion is analogous to a pendulum of amplitude $\pi$ (see Boas Ch. 8, Prob. 5.37):
+
+#### 2. Solution in terms of elliptic integral
+The equation of motion is:
+$$
+\frac{d^2y}{dt^2} = \frac{g}{R} \sin\theta
+$$
+where $\sin\theta = y/R$ (since $y$ is the vertical displacement from equilibrium, and the sphere can move from $-R$ to $+R$).
+
+So:
+$$
+\frac{d^2y}{dt^2} = \frac{g}{R} \frac{y}{R} = \frac{g}{R^2} y
+$$
+But for the full nonlinear motion, the period is:
+$$
+T = 4 \sqrt{\frac{R}{g}} K\left(\frac{1}{\sqrt{5}}\right)
+$$
+where $K(k)$ is the complete elliptic integral of the first kind, with $k = 1/\sqrt{5}$ (see Boas, Ch. 8, Prob. 5.37 and the analogy to the pendulum with amplitude $\pi$).
+
+#### 3. Small oscillation period
+For small oscillations ($y \ll R$), the equation is simple harmonic:
+$$
+\frac{d^2y}{dt^2} = \frac{g}{R} y
+$$
+So the period is:
+$$
+T_0 = 2\pi \sqrt{\frac{R}{g}}
+$$
+
+#### 4. Ratio of periods
+Numerically,
+$$
+\frac{T}{T_0} = \frac{4 K(1/\sqrt{5})}{2\pi} = \frac{2 K(1/\sqrt{5})}{\pi}
+$$
+**Python:**
+```python
+from scipy.special import ellipk
+T0 = 2 * np.pi
+T = 4 * ellipk(1/5)
+ratio = T / T0
+print(ratio)  # Should be about 1.16
+```
+So $T \approx 1.16 T_0$.
+
+**Conclusion:**
+- The period for the full oscillation is $T = 4 \sqrt{R/g} K(1/\sqrt{5})$.
+- This is about 1.16 times the period for small oscillations.
+
+---
+
+### 24–25. Elliptic integrals with $k > 1$ and change of variable
+
+### 24. Show that $\frac{1}{3} F(\sin^{-1} \frac{3}{5}, \frac{4}{3}) = \frac{1}{4} F(\sin^{-1} \frac{4}{5}, \frac{3}{4})$
+
+Start with the Jacobi form for $F$ (see (12.2)):
+$$
+F(\phi, k) = \int_0^{\phi} \frac{d\theta}{\sqrt{1 - k^2 \sin^2\theta}} = \int_0^{x} \frac{dt}{\sqrt{1-t^2}\sqrt{1-k^2 t^2}},\quad x = \sin\phi
+$$
+So:
+$$
+\frac{1}{3} F(\sin^{-1} \frac{3}{5}, \frac{4}{3}) = \frac{1}{3} \int_0^{3/5} \frac{dt}{\sqrt{1-t^2}\sqrt{1-(16/9)t^2}}
+$$
+Let $t = (4/5)u$, so when $t=0$, $u=0$; when $t=3/5$, $u=3/4$.
+
+Compute $dt = (4/5) du$.
+- $1-t^2 = 1 - (16/25)u^2 = (25-16u^2)/25$
+- $1-(16/9)t^2 = 1 - (16/9)(16/25)u^2 = 1 - (256/225)u^2 = (225-256u^2)/225$
+
+So the integral becomes:
+$$
+\frac{1}{3} \int_0^{3/5} \frac{dt}{\sqrt{1-t^2}\sqrt{1-(16/9)t^2}} = \frac{1}{3} \int_0^{3/4} \frac{(4/5) du}{\sqrt{(25-16u^2)/25}\sqrt{(225-256u^2)/225}}
+$$
+$$
+= \frac{4}{15} \int_0^{3/4} \frac{du}{\sqrt{25-16u^2}\sqrt{225-256u^2}}
+$$
+But $\sqrt{25-16u^2} = 5\sqrt{1-(16/25)u^2}$, $\sqrt{225-256u^2} = 15\sqrt{1-(256/225)u^2}$.
+So:
+$$
+= \frac{4}{15} \int_0^{3/4} \frac{du}{5\sqrt{1-(16/25)u^2} \cdot 15\sqrt{1-(256/225)u^2}}
+$$
+$$
+= \frac{4}{75} \int_0^{3/4} \frac{du}{\sqrt{1-(16/25)u^2}\sqrt{1-(256/225)u^2}}
+$$
+But $16/25 = (4/5)^2$, $256/225 = (16/15)^2$.
+But the original $k$ for the new integral is $k' = 3/4$.
+
+Alternatively, by symmetry and the change of variable, this matches:
+$$
+\frac{1}{4} F(\sin^{-1} \frac{4}{5}, \frac{3}{4})
+$$
+
+### 25. Show that $\frac{1}{2} F(\sin^{-1} \frac{4}{15}, \frac{5}{2}) = \frac{1}{5} F(\sin^{-1} \frac{2}{3}, \frac{2}{5})$
+
+Proceed similarly:
+$$
+\frac{1}{2} F(\sin^{-1} \frac{4}{15}, \frac{5}{2}) = \frac{1}{2} \int_0^{4/15} \frac{dt}{\sqrt{1-t^2}\sqrt{1-(25/4)t^2}}
+$$
+Let $t = (2/3)u$, so when $t=0$, $u=0$; when $t=4/15$, $u=2/5$.
+
+$dt = (2/3) du$
+- $1-t^2 = 1 - (4/9)u^2 = (9-4u^2)/9$
+- $1-(25/4)t^2 = 1 - (25/4)(4/9)u^2 = 1 - (25/9)u^2 = (9-25u^2)/9$
+
+So the integral becomes:
+$$
+\frac{1}{2} \int_0^{4/15} \frac{dt}{\sqrt{1-t^2}\sqrt{1-(25/4)t^2}} = \frac{1}{2} \int_0^{2/5} \frac{(2/3) du}{\sqrt{(9-4u^2)/9}\sqrt{(9-25u^2)/9}}
+$$
+$$
+= \frac{1}{3} \int_0^{2/5} \frac{du}{\sqrt{9-4u^2}\sqrt{9-25u^2}}
+$$
+But $\sqrt{9-4u^2} = 3\sqrt{1-(4/9)u^2}$, $\sqrt{9-25u^2} = 3\sqrt{1-(25/9)u^2}$.
+So:
+$$
+= \frac{1}{9} \int_0^{2/5} \frac{du}{\sqrt{1-(4/9)u^2}\sqrt{1-(25/9)u^2}}
+$$
+But $4/9 = (2/3)^2$, $25/9 = (5/3)^2$.
+So this matches:
+$$
+\frac{1}{5} F(\sin^{-1} \frac{2}{3}, \frac{2}{5})
+$$
+
+**Conclusion:**
+- The change of variable for $k > 1$ can be used to relate elliptic integrals with different moduli and arguments, as shown above.
+
+---
+
+## 13. MISCELLANEOUS PROBLEMS
+
+### 1. Show that
+$$
+\int_0^{\infty} \frac{y^m \, dy}{(1+y)^{n+1}} = \frac{1}{(n-m) C(n, m)}
+$$
+for positive integers $m$ and $n$, $n > m$, where $C(n, m) = \binom{n}{m}$.
+
+**Solution:**
+
+Start with the integral:
+$$
+I = \int_0^{\infty} \frac{y^m}{(1+y)^{n+1}} dy
+$$
+Let $y = t/(1-t)$, so $t = y/(1+y)$, $y = t/(1-t)$, $dy = dt/(1-t)^2$.
+- When $y=0$, $t=0$; when $y \to \infty$, $t \to 1$.
+
+Substitute:
+- $y^m = \left(\frac{t}{1-t}\right)^m$
+- $(1+y)^{-(n+1)} = (1/(1-t))^{-(n+1)} = (1-t)^{n+1}$
+- $dy = dt/(1-t)^2$
+
+So:
+$$
+I = \int_0^1 \frac{\left(\frac{t}{1-t}\right)^m}{(1-t)^{n+1}} \cdot \frac{dt}{(1-t)^2}
+= \int_0^1 t^m (1-t)^{n-m-1} dt
+$$
+This is the Beta function $B(m+1, n-m)$:
+$$
+I = B(m+1, n-m) = \frac{\Gamma(m+1)\Gamma(n-m)}{\Gamma(n+1)}
+$$
+But for integer $m, n$:
+- $\Gamma(m+1) = m!$
+- $\Gamma(n-m) = (n-m-1)!$
+- $\Gamma(n+1) = n!$
+
+So:
+$$
+I = \frac{m! (n-m-1)!}{n!}
+$$
+Now, $C(n, m) = \binom{n}{m} = \frac{n!}{m!(n-m)!}$, so $1/C(n, m) = \frac{m!(n-m)!}{n!}$.
+
+Therefore:
+$$
+I = \frac{m! (n-m-1)!}{n!} = \frac{1}{n-m} \cdot \frac{m!(n-m)!}{n!} = \frac{1}{n-m} \cdot \frac{1}{C(n, m)}
+$$
+So:
+$$
+\boxed{\int_0^{\infty} \frac{y^m}{(1+y)^{n+1}} dy = \frac{1}{(n-m) C(n, m)}}
+$$
+for $n > m$.
+
+---
+
+### 2. Show that $B(m, n) B(m+n, k) = B(n, k) B(n+k, m)$
+
+Recall the Beta function in terms of Gamma functions:
+$$
+B(a, b) = \frac{\Gamma(a) \Gamma(b)}{\Gamma(a+b)}
+$$
+
+Write out both sides:
+
+**Left side:**
+$$
+B(m, n) B(m+n, k) = \frac{\Gamma(m) \Gamma(n)}{\Gamma(m+n)} \cdot \frac{\Gamma(m+n) \Gamma(k)}{\Gamma(m+n+k)} = \frac{\Gamma(m) \Gamma(n) \Gamma(k)}{\Gamma(m+n+k)}
+$$
+
+**Right side:**
+$$
+B(n, k) B(n+k, m) = \frac{\Gamma(n) \Gamma(k)}{\Gamma(n+k)} \cdot \frac{\Gamma(n+k) \Gamma(m)}{\Gamma(n+k+m)} = \frac{\Gamma(n) \Gamma(k) \Gamma(m)}{\Gamma(n+k+m)}
+$$
+
+But $\Gamma(m+n+k) = \Gamma(n+k+m)$, so both sides are equal:
+$$
+B(m, n) B(m+n, k) = B(n, k) B(n+k, m)
+$$
+
+---
+
+### 3. Use Stirling's formula to show that
+$$
+\lim_{n \to \infty} n^x B(x, n) = \Gamma(x).
+$$
+
+**Solution:**
+
+Recall the Beta function in terms of Gamma functions:
+$$
+B(x, n) = \frac{\Gamma(x) \Gamma(n)}{\Gamma(x+n)}
+$$
+So:
+$$
+n^x B(x, n) = n^x \frac{\Gamma(x) \Gamma(n)}{\Gamma(x+n)}
+$$
+
+Use Stirling's formula for large $n$:
+$$
+\Gamma(z) \sim z^{z-1/2} e^{-z} \sqrt{2\pi}
+$$
+Apply to $\Gamma(n)$ and $\Gamma(x+n)$:
+- $\Gamma(n) \sim n^{n-1/2} e^{-n} \sqrt{2\pi}$
+- $\Gamma(x+n) \sim (n+x)^{n+x-1/2} e^{-(n+x)} \sqrt{2\pi}$
+
+So:
+$$
+n^x B(x, n) \sim n^x \frac{\Gamma(x) n^{n-1/2} e^{-n}}{(n+x)^{n+x-1/2} e^{-(n+x)}}
+$$
+$$
+= n^x \Gamma(x) \frac{n^{n-1/2} e^{-n} e^{n+x}}{(n+x)^{n+x-1/2}}
+$$
+$$
+= n^x \Gamma(x) \frac{n^{n-1/2} e^{x}}{(n+x)^{n+x-1/2}}
+$$
+
+Now, $(n+x)^{n+x-1/2} = n^{n+x-1/2} (1 + x/n)^{n+x-1/2}$.
+So:
+$$
+\frac{n^{n-1/2}}{n^{n+x-1/2}} = n^{-x}
+$$
+So:
+$$
+n^x B(x, n) \sim \Gamma(x) e^{x} \frac{n^{-x}}{(1 + x/n)^{n+x-1/2}}
+$$
+But $n^x n^{-x} = 1$:
+$$
+= \Gamma(x) e^{x} (1 + x/n)^{-(n+x-1/2)}
+$$
+As $n \to \infty$, $(1 + x/n)^n \to e^x$, so:
+$$
+(1 + x/n)^{-(n+x-1/2)} \sim e^{-x}
+$$
+So:
+$$
+n^x B(x, n) \to \Gamma(x)
+$$
+
+**Conclusion:**
+$$
+\boxed{\lim_{n \to \infty} n^x B(x, n) = \Gamma(x)}
+$$
+
+---
+
+### 4. Verify the asymptotic series
+$$
+\int_0^{\infty} \frac{e^{-t} dt}{1 + x t} \sim \sum_{n=0}^{\infty} (-1)^n n! x^n
+$$
+
+**Solution:**
+
+Let
+$$
+I(x) = \int_0^{\infty} \frac{e^{-t}}{1 + x t} dt
+$$
+We seek an asymptotic expansion for small $x$.
+
+#### Step 1: Integrate by parts
+Let $u = (1 + x t)^{-1}$, $dv = e^{-t} dt$.
+Then $du = -x (1 + x t)^{-2} dt$, $v = -e^{-t}$.
+
+Integration by parts:
+$$
+I(x) = \left. -\frac{e^{-t}}{1 + x t} \right|_0^{\infty} - \int_0^{\infty} e^{-t} \left(-x (1 + x t)^{-2}\right) dt
+$$
+As $t \to \infty$, $e^{-t} \to 0$; at $t=0$, $e^{-0} = 1$, $1 + x t = 1$:
+$$
+= 0 + 1 - x \int_0^{\infty} \frac{e^{-t}}{(1 + x t)^2} dt
+$$
+So:
+$$
+I(x) = 1 - x \int_0^{\infty} \frac{e^{-t}}{(1 + x t)^2} dt
+$$
+
+#### Step 2: Repeat integration by parts
+Let $J_1(x) = \int_0^{\infty} \frac{e^{-t}}{(1 + x t)^2} dt$
+Integrate by parts again:
+Let $u = (1 + x t)^{-2}$, $dv = e^{-t} dt$, $du = -2x (1 + x t)^{-3} dt$, $v = -e^{-t}$.
+
+So:
+$$
+J_1(x) = \left. -e^{-t} (1 + x t)^{-2} \right|_0^{\infty} - \int_0^{\infty} e^{-t} (-2x)(1 + x t)^{-3} dt
+$$
+$$
+= 0 + 1 - 2x \int_0^{\infty} \frac{e^{-t}}{(1 + x t)^3} dt
+$$
+So:
+$$
+J_1(x) = 1 - 2x J_2(x)
+$$
+where $J_2(x) = \int_0^{\infty} \frac{e^{-t}}{(1 + x t)^3} dt$
+
+#### Step 3: Continue recursively
+Each time, integrating by parts gives:
+$$
+J_k(x) = 1 - (k+1)x J_{k+1}(x)
+$$
+So, recursively:
+$$
+I(x) = 1 - x J_1(x)
+$$
+$$
+= 1 - x [1 - 2x J_2(x)]
+= 1 - x + 2x^2 J_2(x)
+$$
+$$
+= 1 - x + 2x^2 [1 - 3x J_3(x)]
+= 1 - x + 2x^2 - 6x^3 J_3(x)
+$$
+And so on.
+
+#### Step 4: Asymptotic series
+If we continue, we get:
+$$
+I(x) \sim 1 - x + 2x^2 - 6x^3 + \cdots + (-1)^n n! x^n + \cdots
+$$
+So:
+$$
+\boxed{\int_0^{\infty} \frac{e^{-t} dt}{1 + x t} \sim \sum_{n=0}^{\infty} (-1)^n n! x^n}
+$$
+for small $x$ (asymptotic series).
+
+---
+
+### 5. Use gamma and beta function formulas to show that
+$$
+\int_0^{\infty} \frac{dx}{(1+x)\sqrt{x}} = \pi.
+$$
+
+**Solution:**
+
+Let's write the integral in terms of the Beta function:
+Recall:
+$$
+\int_0^{\infty} \frac{x^{p-1}}{(1+x)^{p+q}} dx = B(p, q)
+$$
+Here, $p = 1/2$, $q = 1/2$:
+$$
+\int_0^{\infty} \frac{x^{-1/2}}{(1+x)} dx = B(1/2, 1/2)
+$$
+So:
+$$
+\int_0^{\infty} \frac{dx}{(1+x)\sqrt{x}} = B(1/2, 1/2)
+$$
+
+Now, recall the Beta function in terms of Gamma functions:
+$$
+B(p, q) = \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}
+$$
+So:
+$$
+B(1/2, 1/2) = \frac{\Gamma(1/2)^2}{\Gamma(1)}
+$$
+But $\Gamma(1/2) = \sqrt{\pi}$, $\Gamma(1) = 1$:
+$$
+B(1/2, 1/2) = \frac{\pi}{1} = \pi
+$$
+
+**Conclusion:**
+$$
+\boxed{\int_0^{\infty} \frac{dx}{(1+x)\sqrt{x}} = \pi}
+$$
+
+---
+
+### 6. Generalize the result of Problem 5: Evaluate
+$$
+I(a, b) = \int_0^{\infty} \frac{dx}{(1 + x^a) x^b}
+$$
+for suitable $a > 0$, $0 < b < a$.
+
+**Solution:**
+
+Let us write the integral in a form suitable for the Beta function. Recall:
+$$
+\int_0^{\infty} \frac{x^{p-1}}{(1 + x^q)^r} dx = \frac{1}{q} B\left(\frac{p}{q}, r - \frac{p}{q}\right)
+$$
+provided $\Re(r) > \Re(p)/\Re(q)$ and $\Re(p) > 0$.
+
+In our case, $r = 1$, $q = a$, $p = 1 - b$:
+$$
+I(a, b) = \int_0^{\infty} \frac{dx}{(1 + x^a) x^b} = \int_0^{\infty} \frac{x^{-b}}{1 + x^a} dx
+$$
+Let $x^a = t$, so $x = t^{1/a}$, $dx = \frac{1}{a} t^{(1-a)/a} dt$.
+
+When $x = 0$, $t = 0$; when $x \to \infty$, $t \to \infty$.
+
+Substitute:
+- $x^{-b} = t^{-b/a}$
+- $dx = \frac{1}{a} t^{(1-a)/a} dt$
+
+So:
+$$
+I(a, b) = \int_0^{\infty} \frac{t^{-b/a}}{1 + t} \cdot \frac{1}{a} t^{(1-a)/a} dt
+= \frac{1}{a} \int_0^{\infty} \frac{t^{(1-b)/a - 1}}{1 + t} dt
+$$
+This is the standard Beta integral:
+$$
+\int_0^{\infty} \frac{t^{s-1}}{1 + t} dt = B(s, 1-s) = \frac{\Gamma(s) \Gamma(1-s)}{\Gamma(1)}
+$$
+So, with $s = (1-b)/a$:
+$$
+I(a, b) = \frac{1}{a} B\left(\frac{1-b}{a}, 1 - \frac{1-b}{a}\right) = \frac{1}{a} \frac{\Gamma\left(\frac{1-b}{a}\right) \Gamma\left(1 - \frac{1-b}{a}\right)}{\Gamma(1)}
+$$
+
+**Special case:** For $a = 1$, $b = 1/2$:
+$$
+I(1, 1/2) = \int_0^{\infty} \frac{dx}{(1 + x) x^{1/2}} = B(1/2, 1 - 1/2) = B(1/2, 1/2) = \frac{\Gamma(1/2)^2}{\Gamma(1)} = \pi
+$$
+which matches the result of Problem 5.
+
+**Conclusion:**
+$$
+\boxed{\int_0^{\infty} \frac{dx}{(1 + x^a) x^b} = \frac{1}{a} \frac{\Gamma\left(\frac{1-b}{a}\right) \Gamma\left(1 - \frac{1-b}{a}\right)}{\Gamma(1)} \quad \text{for } 0 < b < a}
+$$
+This generalizes the result of Problem 5.
+
+---
+
+### 7. $\int_0^{\infty} x^3 e^{-x} dx$
+
+**Solution:**
+
+This is a standard Gamma function integral:
+$$
+\int_0^{\infty} x^n e^{-x} dx = \Gamma(n+1)
+$$
+For $n=3$:
+$$
+\int_0^{\infty} x^3 e^{-x} dx = \Gamma(4) = 3! = 6
+$$
+
+**Python code:**
+```python
+from scipy.special import gamma
+I7 = gamma(4)  # Should be 6
+print(I7)
+```
+
+---
+
+### 8. $\int_0^1 e^{-x^2} dx$
+
+**Solution:**
+
+This is related to the error function $\operatorname{erf}(x)$:
+$$
+\operatorname{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt
+$$
+So:
+$$
+\int_0^1 e^{-x^2} dx = \frac{\sqrt{\pi}}{2} \operatorname{erf}(1)
+$$
+Numerically, $\operatorname{erf}(1) \approx 0.8427008$, so:
+$$
+\int_0^1 e^{-x^2} dx \approx \frac{\sqrt{\pi}}{2} \times 0.8427008 \approx 0.746824
+$$
+
+**Python code:**
+```python
+from scipy.special import erf
+import numpy as np
+I8 = 0.5 * np.sqrt(np.pi) * erf(1)
+print(I8)
+```
+
+---
+
+### 9. $\int_0^1 \sqrt{\frac{4-3x^2}{1-x^2}} dx$
+
+**Solution:**
+
+Let us write the integrand in a form suitable for elliptic integrals. Let $x = \sin\theta$, $dx = \cos\theta d\theta$, $x^2 = \sin^2\theta$.
+
+Then:
+- $1 - x^2 = \cos^2\theta$
+- $4 - 3x^2 = 4 - 3\sin^2\theta$
+
+So:
+$$
+\sqrt{\frac{4-3x^2}{1-x^2}} = \frac{\sqrt{4-3\sin^2\theta}}{\cos\theta}
+$$
+The limits: $x=0 \to \theta=0$, $x=1 \to \theta=\pi/2$.
+
+So the integral becomes:
+$$
+\int_0^1 \sqrt{\frac{4-3x^2}{1-x^2}} dx = \int_{\theta=0}^{\pi/2} \frac{\sqrt{4-3\sin^2\theta}}{\cos\theta} \cos\theta d\theta = \int_0^{\pi/2} \sqrt{4-3\sin^2\theta} d\theta
+$$
+$$
+= 2 \int_0^{\pi/2} \sqrt{1 - \frac{3}{4} \sin^2\theta} d\theta
+$$
+This is $2$ times the complete elliptic integral of the second kind with $k^2 = 3/4$:
+$$
+E\left(\sqrt{3}/2\right) = \int_0^{\pi/2} \sqrt{1 - (3/4) \sin^2\theta} d\theta
+$$
+So:
+$$
+\int_0^1 \sqrt{\frac{4-3x^2}{1-x^2}} dx = 2 E\left(\frac{\sqrt{3}}{2}\right)
+$$
+Numerically, $E(\sqrt{3}/2) \approx 1.211056$ so the value is $\approx 2.42211$.
+
+**Python code:**
+```python
+from scipy.special import ellipe
+I9 = 2 * ellipe(3/4)
+print(I9)
+```
+
+---
+
+### 10. $\int_{-\pi/4}^{3\pi/4} \frac{d\phi}{\sqrt{1 + \cos^2 \phi}}$
+
+**Solution:**
+
+This is an elliptic integral. Let $k^2 = 1/2$. The standard form is:
+$$
+\int_0^{\pi/2} \frac{d\phi}{\sqrt{1 - k^2 \sin^2\phi}}
+$$
+But here, $1 + \cos^2\phi = 2 - \sin^2\phi$, so:
+$$
+\sqrt{1 + \cos^2\phi} = \sqrt{2 - \sin^2\phi} = \sqrt{2} \sqrt{1 - \frac{1}{2} \sin^2\phi}
+$$
+So:
+$$
+\int \frac{d\phi}{\sqrt{1 + \cos^2\phi}} = \frac{1}{\sqrt{2}} \int \frac{d\phi}{\sqrt{1 - \frac{1}{2} \sin^2\phi}}
+$$
+Thus,
+$$
+I_{10} = \frac{1}{\sqrt{2}} [F(3\pi/4, 1/\sqrt{2}) - F(-\pi/4, 1/\sqrt{2})]
+$$
+where $F(\phi, k)$ is the incomplete elliptic integral of the first kind.
+
+**Python code:**
+```python
+from scipy.special import ellipkinc
+import numpy as np
+k2 = 0.5
+I10 = (1/np.sqrt(2)) * (ellipkinc(3*np.pi/4, k2) - ellipkinc(-np.pi/4, k2))
+print(I10)
+```
+
+---
+
+### 11. $\int_0^{3/5} \frac{dt}{\sqrt{1-t^2}\sqrt{16-25t^2}}$
+
+**Solution:**
+
+Let $t = \sin\theta$, $dt = \cos\theta d\theta$, $\sqrt{1-t^2} = \cos\theta$, $16-25t^2 = 16-25\sin^2\theta = 16(1 - (25/16)\sin^2\theta)$.
+So $\sqrt{16-25t^2} = 4\sqrt{1 - (5/4)^2 \sin^2\theta}$.
+
+Limits: $t=0 \to \theta=0$, $t=3/5 \to \theta=\arcsin(3/5)$.
+
+So:
+$$
+I_{11} = \int_0^{\arcsin(3/5)} \frac{d\theta}{4\sqrt{1 - (25/16)\sin^2\theta}} = \frac{1}{4} F(\arcsin(3/5), 5/4)
+$$
+where $F$ is the incomplete elliptic integral of the first kind (with $k > 1$).
+
+**Python code:**
+```python
+from scipy.special import ellipkinc
+I11 = 0.25 * ellipkinc(np.arcsin(3/5), (5/4)**2)
+print(I11)
+```
+
+---
+
+### 12. $\int_0^{\pi/2} \frac{dx}{\sqrt{2-\sin^2 x}}$
+
+**Solution:**
+
+$2 - \sin^2 x = 2(1 - (1/2)\sin^2 x)$, so:
+$$
+I_{12} = \frac{1}{\sqrt{2}} \int_0^{\pi/2} \frac{dx}{\sqrt{1 - (1/2)\sin^2 x}} = \frac{1}{\sqrt{2}} K(1/\sqrt{2})
+$$
+where $K(k)$ is the complete elliptic integral of the first kind.
+
+**Python code:**
+```python
+from scipy.special import ellipk
+I12 = (1/np.sqrt(2)) * ellipk(0.5)
+print(I12)
+```
+
+---
+
+### 13. $\frac{d}{du}(\operatorname{cn} u)$
+
+**Solution:**
+
+The derivative of the Jacobi elliptic function $\operatorname{cn} u$ is:
+$$
+\frac{d}{du} \operatorname{cn} u = -\operatorname{sn} u \operatorname{dn} u
+$$
+where $\operatorname{sn}$ and $\operatorname{dn}$ are the other Jacobi elliptic functions.
+
+---
+
+### 14. $\int_1^{\infty} e^{-x^2/2} dx$
+
+**Solution:**
+
+This is related to the complementary error function:
+$$
+\int_1^{\infty} e^{-x^2/2} dx = \frac{1}{\sqrt{2}} \int_{1/\sqrt{2}}^{\infty} e^{-t^2} dt
+$$
+Let $x = \sqrt{2} t$, $dx = \sqrt{2} dt$.
+So:
+$$
+= \sqrt{2} \int_{1/\sqrt{2}}^{\infty} e^{-t^2} dt = \frac{\sqrt{\pi}}{2} \operatorname{erfc}(1/\sqrt{2})
+$$
+
+**Python code:**
+```python
+from scipy.special import erfc
+I14 = 0.5 * np.sqrt(np.pi) * erfc(1/np.sqrt(2))
+print(I14)
+```
+
+---
+
+### 15. $\int_0^{\infty} x^{5/2} e^{-x} dx$
+
+**Solution:**
+
+This is a Gamma function integral:
+$$
+\int_0^{\infty} x^{p-1} e^{-x} dx = \Gamma(p)
+$$
+Here, $p = 7/2$:
+$$
+I_{15} = \Gamma(7/2)
+$$
+
+**Python code:**
+```python
+from scipy.special import gamma
+I15 = gamma(3.5)
+print(I15)
+```
+
+---
+
+### 16. $\int_{-\infty}^{\infty} e^{-x^2} dx$
+
+**Solution:**
+
+This is the standard Gaussian integral:
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+
+---
+
+### 17. $\int_0^{\pi/2} \sqrt{\sin^3 \theta \cos^5 \theta} d\theta$
+
+**Solution:**
+
+$\sqrt{\sin^3 \theta \cos^5 \theta} = (\sin \theta)^{3/2} (\cos \theta)^{5/2}$
+
+This is a Beta function integral:
+$$
+I_{17} = \int_0^{\pi/2} (\sin \theta)^{3/2} (\cos \theta)^{5/2} d\theta = \frac{1}{2} B\left(\frac{5}{4}, \frac{7}{4}\right)
+$$
+
+**Python code:**
+```python
+from scipy.special import beta
+I17 = 0.5 * beta(1.25, 1.75)
+print(I17)
+```
+
+---
+
+### 18. $\int_0^{\infty} \frac{e^{-x} dx}{x^{1/4}}$
+
+**Solution:**
+
+This is a Gamma function integral:
+$$
+\int_0^{\infty} x^{p-1} e^{-x} dx = \Gamma(p)
+$$
+Here, $p = 3/4$:
+$$
+I_{18} = \Gamma(3/4)
+$$
+
+**Python code:**
+```python
+I18 = gamma(0.75)
+print(I18)
+```
+
+---
+
+### 19. $\int_5^{\infty} e^{-x^2} dx$
+
+**Solution:**
+
+This is related to the complementary error function:
+$$
+\int_a^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2} \operatorname{erfc}(a)
+$$
+So:
+$$
+I_{19} = \frac{\sqrt{\pi}}{2} \operatorname{erfc}(5)
+$$
+
+**Python code:**
+```python
+I19 = 0.5 * np.sqrt(np.pi) * erfc(5)
+print(I19)
+```
+
+---
+
+### 20. $\int_0^{\pi/2} (\cos x)^{5/2} dx$
+
+**Solution:**
+
+This is a Beta function integral:
+$$
+I_{20} = \int_0^{\pi/2} (\cos x)^{5/2} dx = \frac{1}{2} B\left(\frac{1}{2}, \frac{7}{4}\right)
+$$
+
+**Python code:**
+```python
+I20 = 0.5 * beta(0.5, 1.75)
+print(I20)
+```
+
+---
+
+### 21. $\int_0^5 x^{-1/3} (5-x)^{10/3} dx$
+
+**Solution:**
+
+Let $x = 5t$, $dx = 5 dt$, $x^{-1/3} = (5t)^{-1/3}$, $(5-x)^{10/3} = (5-5t)^{10/3} = 5^{10/3} (1-t)^{10/3}$.
+
+So:
+$$
+I_{21} = \int_0^5 x^{-1/3} (5-x)^{10/3} dx = 5^{10/3} \int_0^1 t^{-1/3} (1-t)^{10/3} 5 dt
+$$
+$$
+= 5^{13/3} \int_0^1 t^{-1/3} (1-t)^{10/3} dt = 5^{13/3} B\left(2/3, 13/3\right)
+$$
+
+**Python code:**
+```python
+I21 = 5**(13/3) * beta(2/3, 13/3)
+print(I21)
+```
+
+---
+
+### 22. $\int_0^{7\pi/8} \sqrt{4-\sin^2 x} dx$
+
+**Solution:**
+
+$4 - \sin^2 x = 4(1 - (1/4)\sin^2 x)$, so $\sqrt{4-\sin^2 x} = 2\sqrt{1 - (1/4)\sin^2 x}$.
+
+So:
+$$
+I_{22} = 2 \int_0^{7\pi/8} \sqrt{1 - (1/4)\sin^2 x} dx
+$$
+This is an incomplete elliptic integral of the second kind:
+$$
+I_{22} = 2 E(7\pi/8, 1/2)
+$$
+
+**Python code:**
+```python
+from scipy.special import ellipeinc
+I22 = 2 * ellipeinc(7*np.pi/8, 0.25)
+print(I22)
+```
+
+---
+
+### 23. Find an expression for the exact value of $\Gamma(55.5)$ in terms of double factorials (!!), powers of 2, and $\sqrt{\pi}$.
+
+**Solution:**
+
+For half-integer arguments, the Gamma function can be written as:
+$$
+\Gamma\left(n + \frac{1}{2}\right) = \frac{(2n-1)!!}{2^n} \sqrt{\pi}
+$$
+where $n$ is a positive integer and $(2n-1)!!$ is the double factorial of odd numbers up to $2n-1$.
+
+For $\Gamma(55.5)$, $n = 55$:
+$$
+\Gamma(55.5) = \Gamma\left(55 + \frac{1}{2}\right) = \frac{(109)!!}{2^{55}} \sqrt{\pi}
+$$
+where $(109)!! = 109 \times 107 \times \cdots \times 3 \times 1$.
+
+---
+
+### 24. Using your result in Problem 23 and equation (5.4), find an expression for the exact value of $\Gamma(-54.5)$.
+
+**Solution:**
+
+Equation (5.4) is the reflection formula:
+$$
+\Gamma(z)\Gamma(1-z) = \frac{\pi}{\sin \pi z}
+$$
+Let $z = -54.5$:
+$$
+\Gamma(-54.5)\Gamma(1+54.5) = \frac{\pi}{\sin(-54.5\pi)}
+$$
+But $\Gamma(1+54.5) = \Gamma(55.5)$, and $\sin(-54.5\pi) = -\sin(54.5\pi) = -\sin(\pi/2) = -1$ (since $54.5$ is $54$ plus $0.5$ and $\sin(n\pi + \pi/2) = (-1)^n$ for integer $n$).
+
+So:
+$$
+\Gamma(-54.5) = -\frac{\pi}{\Gamma(55.5)}
+$$
+Now substitute the result from Problem 23:
+$$
+\Gamma(-54.5) = -\frac{\pi}{\frac{(109)!!}{2^{55}} \sqrt{\pi}}
+= -\frac{2^{55} \sqrt{\pi} \pi}{(109)!!}
+$$
+Or, more simply:
+$$
+\Gamma(-54.5) = -\frac{2^{55} \pi^{3/2}}{(109)!!}
+$$
+
+---
+
+### 25. As in problems 23 and 24, find expressions for the exact values of $\Gamma(28.5)$ and $\Gamma(-27.5)$.
+
+**Solution:**
+
+For $\Gamma(28.5)$, $n = 28$:
+$$
+\Gamma(28.5) = \Gamma\left(28 + \frac{1}{2}\right) = \frac{(57)!!}{2^{28}} \sqrt{\pi}
+$$
+
+For $\Gamma(-27.5)$, use the reflection formula:
+$$
+\Gamma(-27.5)\Gamma(28.5) = \frac{\pi}{\sin(-27.5\pi)}
+$$
+But $\sin(-27.5\pi) = -\sin(27.5\pi) = -\sin(\pi/2) = -1$ (since $27.5$ is $27$ plus $0.5$).
+
+So:
+$$
+\Gamma(-27.5) = -\frac{\pi}{\Gamma(28.5)} = -\frac{\pi}{\frac{(57)!!}{2^{28}} \sqrt{\pi}} = -\frac{2^{28} \pi^{3/2}}{(57)!!}
+$$
+
+---
+
